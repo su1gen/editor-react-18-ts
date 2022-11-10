@@ -1,0 +1,1 @@
+export var toolbarTestIdPrefix = 'ak-editor-toolbar-button';

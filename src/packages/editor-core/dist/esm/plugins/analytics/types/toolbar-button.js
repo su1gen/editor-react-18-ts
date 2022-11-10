@@ -1,0 +1,1 @@
+export { TOOLBAR_ACTION_SUBJECT_ID } from '@atlaskit/editor-common/analytics';

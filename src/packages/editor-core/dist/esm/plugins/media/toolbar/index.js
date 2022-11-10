@@ -1,0 +1,380 @@
+import _defineProperty from "@babel/runtime/helpers/defineProperty";
+import _toConsumableArray from "@babel/runtime/helpers/toConsumableArray";
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+import React from 'react';
+import { NodeSelection } from 'prosemirror-state';
+import { findParentNodeOfType, removeSelectedNode } from 'prosemirror-utils';
+import RemoveIcon from '@atlaskit/icon/glyph/editor/remove';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
+import { mediaFilmstripItemDOMSelector } from '@atlaskit/media-filmstrip';
+import commonMessages from '../../../messages';
+import { stateKey } from '../pm-plugins/plugin-key';
+import { hoverDecoration } from '../../base/pm-plugins/decoration';
+import { getLinkingToolbar, shouldShowMediaLinkToolbar } from './linking';
+import buildLayoutButtons from '../../../ui/MediaAndEmbedsToolbar';
+import { getMediaLinkingState } from '../pm-plugins/linking';
+import { getPluginState as getMediaAltTextPluginState } from '../pm-plugins/alt-text';
+import { altTextButton, getAltTextToolbar } from './alt-text';
+import { showLinkingToolbar } from '../commands/linking';
+import { LinkToolbarAppearance } from './linking-toolbar-appearance';
+import { ACTION, ACTION_SUBJECT, ACTION_SUBJECT_ID, addAnalytics, EVENT_TYPE } from '../../analytics';
+import { messages } from '@atlaskit/media-ui';
+import { messages as cardMessages } from '../../card/messages';
+import { FilePreviewItem } from './filePreviewItem';
+import { downloadMedia, removeMediaGroupNode } from './utils';
+import { changeInlineToMediaCard, changeMediaCardToInline, removeInlineCard } from './commands';
+import { MediaInlineNodeSelector, MediaSingleNodeSelector } from '../nodeviews/styles';
+
+var remove = function remove(state, dispatch) {
+  if (dispatch) {
+    dispatch(removeSelectedNode(state.tr));
+  }
+
+  return true;
+};
+
+var handleRemoveMediaGroup = function handleRemoveMediaGroup(state, dispatch) {
+  var tr = removeMediaGroupNode(state);
+
+  if (dispatch) {
+    dispatch(tr);
+  }
+
+  return true;
+};
+
+var generateMediaCardFloatingToolbar = function generateMediaCardFloatingToolbar(state, intl, mediaPluginState) {
+  var mediaGroup = state.schema.nodes.mediaGroup;
+  var items = [{
+    id: 'editor.media.view.switcher',
+    type: 'dropdown',
+    title: intl.formatMessage(messages.changeView),
+    options: [{
+      id: 'editor.media.view.switcher.inline',
+      title: intl.formatMessage(cardMessages.inline),
+      selected: false,
+      disabled: false,
+      onClick: changeMediaCardToInline,
+      testId: 'inline-appearance'
+    }, {
+      id: 'editor.media.view.switcher.thumbnail',
+      title: intl.formatMessage(messages.displayThumbnail),
+      selected: true,
+      disabled: false,
+      onClick: function onClick() {
+        return true;
+      },
+      testId: 'thumbnail-appearance'
+    }]
+  }, {
+    type: 'separator'
+  }, {
+    type: 'custom',
+    fallback: [],
+    render: function render() {
+      return /*#__PURE__*/React.createElement(FilePreviewItem, {
+        key: "editor.media.card.preview",
+        mediaPluginState: mediaPluginState,
+        intl: intl
+      });
+    }
+  }, {
+    type: 'separator'
+  }, {
+    id: 'editor.media.card.download',
+    type: 'button',
+    icon: DownloadIcon,
+    onClick: function onClick() {
+      downloadMedia(mediaPluginState);
+      return true;
+    },
+    title: intl.formatMessage(messages.download)
+  }, {
+    type: 'separator'
+  }, {
+    type: 'copy-button',
+    items: [{
+      state: state,
+      formatMessage: intl.formatMessage,
+      nodeType: mediaGroup
+    }, {
+      type: 'separator'
+    }]
+  }, {
+    id: 'editor.media.delete',
+    type: 'button',
+    appearance: 'danger',
+    icon: RemoveIcon,
+    onMouseEnter: hoverDecoration(mediaGroup, true),
+    onMouseLeave: hoverDecoration(mediaGroup, false),
+    onFocus: hoverDecoration(mediaGroup, true),
+    onBlur: hoverDecoration(mediaGroup, false),
+    title: intl.formatMessage(commonMessages.remove),
+    onClick: handleRemoveMediaGroup,
+    testId: 'media-toolbar-remove-button'
+  }];
+  return items;
+};
+
+var generateMediaInlineFloatingToolbar = function generateMediaInlineFloatingToolbar(state, intl, mediaPluginState) {
+  var mediaInline = state.schema.nodes.mediaInline;
+  var items = [{
+    id: 'editor.media.view.switcher',
+    type: 'dropdown',
+    title: intl.formatMessage(messages.changeView),
+    options: [{
+      id: 'editor.media.view.switcher.inline',
+      title: intl.formatMessage(cardMessages.inline),
+      selected: true,
+      disabled: false,
+      onClick: function onClick() {
+        return true;
+      },
+      testId: 'inline-appearance'
+    }, {
+      id: 'editor.media.view.switcher.thumbnail',
+      title: intl.formatMessage(messages.displayThumbnail),
+      selected: false,
+      disabled: false,
+      onClick: changeInlineToMediaCard,
+      testId: 'thumbnail-appearance'
+    }]
+  }, {
+    type: 'separator'
+  }, {
+    type: 'custom',
+    fallback: [],
+    render: function render() {
+      return /*#__PURE__*/React.createElement(FilePreviewItem, {
+        key: "editor.media.card.preview",
+        mediaPluginState: mediaPluginState,
+        intl: intl
+      });
+    }
+  }, {
+    type: 'separator'
+  }, {
+    id: 'editor.media.card.download',
+    type: 'button',
+    icon: DownloadIcon,
+    onClick: function onClick() {
+      downloadMedia(mediaPluginState);
+      return true;
+    },
+    title: intl.formatMessage(messages.download)
+  }, {
+    type: 'separator'
+  }, {
+    type: 'copy-button',
+    items: [{
+      state: state,
+      formatMessage: intl.formatMessage,
+      nodeType: mediaInline
+    }, {
+      type: 'separator'
+    }]
+  }, {
+    id: 'editor.media.delete',
+    type: 'button',
+    appearance: 'danger',
+    icon: RemoveIcon,
+    onMouseEnter: hoverDecoration(mediaInline, true),
+    onMouseLeave: hoverDecoration(mediaInline, false),
+    onFocus: hoverDecoration(mediaInline, true),
+    onBlur: hoverDecoration(mediaInline, false),
+    title: intl.formatMessage(commonMessages.remove),
+    onClick: removeInlineCard,
+    testId: 'media-toolbar-remove-button'
+  }];
+  return items;
+};
+
+var generateMediaSingleFloatingToolbar = function generateMediaSingleFloatingToolbar(state, intl, options, pluginState, mediaLinkingState) {
+  var mediaSingle = state.schema.nodes.mediaSingle;
+  var allowResizing = options.allowResizing,
+      allowLinking = options.allowLinking,
+      allowAdvancedToolBarOptions = options.allowAdvancedToolBarOptions,
+      allowResizingInTables = options.allowResizingInTables,
+      allowAltTextOnImages = options.allowAltTextOnImages;
+  var toolbarButtons = [];
+
+  if (allowAdvancedToolBarOptions) {
+    toolbarButtons = buildLayoutButtons(state, intl, state.schema.nodes.mediaSingle, allowResizing, allowResizingInTables);
+
+    if (toolbarButtons.length) {
+      toolbarButtons.push({
+        type: 'separator'
+      });
+    }
+
+    if (allowLinking && shouldShowMediaLinkToolbar(state)) {
+      toolbarButtons.push({
+        type: 'custom',
+        fallback: [],
+        render: function render(editorView, idx) {
+          if (editorView !== null && editorView !== void 0 && editorView.state) {
+            var editLink = function editLink() {
+              if (editorView) {
+                var _state = editorView.state,
+                    dispatch = editorView.dispatch;
+                showLinkingToolbar(_state, dispatch);
+              }
+            };
+
+            var openLink = function openLink() {
+              if (editorView) {
+                var _state2 = editorView.state,
+                    dispatch = editorView.dispatch;
+                dispatch(addAnalytics(_state2, _state2.tr, {
+                  eventType: EVENT_TYPE.TRACK,
+                  action: ACTION.VISITED,
+                  actionSubject: ACTION_SUBJECT.MEDIA,
+                  actionSubjectId: ACTION_SUBJECT_ID.LINK
+                }));
+                return true;
+              }
+            };
+
+            return /*#__PURE__*/React.createElement(LinkToolbarAppearance, {
+              key: idx,
+              editorState: editorView.state,
+              intl: intl,
+              mediaLinkingState: mediaLinkingState,
+              onAddLink: editLink,
+              onEditLink: editLink,
+              onOpenLink: openLink
+            });
+          }
+
+          return null;
+        }
+      });
+    }
+  }
+
+  if (allowAltTextOnImages) {
+    toolbarButtons.push(altTextButton(intl, state), {
+      type: 'separator'
+    });
+  }
+
+  var removeButton = {
+    id: 'editor.media.delete',
+    type: 'button',
+    appearance: 'danger',
+    icon: RemoveIcon,
+    onMouseEnter: hoverDecoration(mediaSingle, true),
+    onMouseLeave: hoverDecoration(mediaSingle, false),
+    onFocus: hoverDecoration(mediaSingle, true),
+    onBlur: hoverDecoration(mediaSingle, false),
+    title: intl.formatMessage(commonMessages.remove),
+    onClick: remove,
+    testId: 'media-toolbar-remove-button'
+  };
+  var items = [].concat(_toConsumableArray(toolbarButtons), [{
+    type: 'copy-button',
+    items: [{
+      state: state,
+      formatMessage: intl.formatMessage,
+      nodeType: mediaSingle
+    }, {
+      type: 'separator'
+    }]
+  }, removeButton]);
+  return items;
+};
+
+export var floatingToolbar = function floatingToolbar(state, intl) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var _state$schema$nodes = state.schema.nodes,
+      media = _state$schema$nodes.media,
+      mediaInline = _state$schema$nodes.mediaInline,
+      mediaSingle = _state$schema$nodes.mediaSingle,
+      mediaGroup = _state$schema$nodes.mediaGroup;
+  var altTextValidator = options.altTextValidator,
+      allowLinking = options.allowLinking,
+      allowAltTextOnImages = options.allowAltTextOnImages,
+      providerFactory = options.providerFactory,
+      allowMediaInline = options.allowMediaInline;
+  var mediaPluginState = stateKey.getState(state);
+  var mediaLinkingState = getMediaLinkingState(state);
+
+  if (!mediaPluginState) {
+    return;
+  }
+
+  var nodeType = allowMediaInline ? [mediaInline, mediaSingle, media] : [mediaSingle];
+  var baseToolbar = {
+    title: 'Media floating controls',
+    nodeType: nodeType,
+    getDomRef: function getDomRef() {
+      return mediaPluginState.element;
+    }
+  };
+
+  if (allowLinking && mediaLinkingState && mediaLinkingState.visible && shouldShowMediaLinkToolbar(state)) {
+    var linkingToolbar = getLinkingToolbar(baseToolbar, mediaLinkingState, state, intl, providerFactory);
+
+    if (linkingToolbar) {
+      return linkingToolbar;
+    }
+  }
+
+  if (allowAltTextOnImages) {
+    var mediaAltTextPluginState = getMediaAltTextPluginState(state);
+
+    if (mediaAltTextPluginState.isAltTextEditorOpen) {
+      return getAltTextToolbar(baseToolbar, {
+        altTextValidator: altTextValidator
+      });
+    }
+  }
+
+  var items = [];
+  var parentMediaGroupNode = findParentNodeOfType(mediaGroup)(state.selection);
+  var selectedNodeType;
+
+  if (state.selection instanceof NodeSelection) {
+    selectedNodeType = state.selection.node.type;
+  }
+
+  if (allowMediaInline && (parentMediaGroupNode === null || parentMediaGroupNode === void 0 ? void 0 : parentMediaGroupNode.node.type) === mediaGroup) {
+    var mediaOffset = state.selection.$from.parentOffset + 1;
+
+    baseToolbar.getDomRef = function () {
+      var _mediaPluginState$ele;
+
+      var selector = mediaFilmstripItemDOMSelector(mediaOffset);
+      return (_mediaPluginState$ele = mediaPluginState.element) === null || _mediaPluginState$ele === void 0 ? void 0 : _mediaPluginState$ele.querySelector(selector);
+    };
+
+    items = generateMediaCardFloatingToolbar(state, intl, mediaPluginState);
+  } else if (allowMediaInline && selectedNodeType && selectedNodeType === mediaInline) {
+    baseToolbar.getDomRef = function () {
+      var _mediaPluginState$ele2;
+
+      var element = (_mediaPluginState$ele2 = mediaPluginState.element) === null || _mediaPluginState$ele2 === void 0 ? void 0 : _mediaPluginState$ele2.querySelector(".".concat(MediaInlineNodeSelector));
+      return element || mediaPluginState.element;
+    };
+
+    items = generateMediaInlineFloatingToolbar(state, intl, mediaPluginState);
+  } else {
+    baseToolbar.getDomRef = function () {
+      var _mediaPluginState$ele3;
+
+      var element = (_mediaPluginState$ele3 = mediaPluginState.element) === null || _mediaPluginState$ele3 === void 0 ? void 0 : _mediaPluginState$ele3.querySelector(".".concat(MediaSingleNodeSelector));
+      return element || mediaPluginState.element;
+    };
+
+    items = generateMediaSingleFloatingToolbar(state, intl, options, mediaPluginState, mediaLinkingState);
+  }
+
+  return _objectSpread(_objectSpread({}, baseToolbar), {}, {
+    items: items,
+    scrollable: true
+  });
+};

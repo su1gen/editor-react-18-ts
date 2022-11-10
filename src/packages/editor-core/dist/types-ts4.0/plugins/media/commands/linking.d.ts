@@ -1,0 +1,10 @@
+import { EditorView } from 'prosemirror-view';
+import { CommandDispatch } from '../../../types/command';
+import { EditorState } from 'prosemirror-state';
+import { INPUT_METHOD } from '../../analytics';
+import { Command } from '../../../types';
+export declare const showLinkingToolbar: import("@atlaskit/editor-common/types").Command;
+export declare const showLinkingToolbarWithMediaTypeCheck: Command;
+export declare const hideLinkingToolbar: (state: EditorState, dispatch?: CommandDispatch | undefined, view?: EditorView<any> | undefined) => void;
+export declare const unlink: import("@atlaskit/editor-common/types").Command;
+export declare const setUrlToMedia: (url: string, inputMethod: INPUT_METHOD.TYPEAHEAD | INPUT_METHOD.MANUAL) => import("@atlaskit/editor-common/types").Command;

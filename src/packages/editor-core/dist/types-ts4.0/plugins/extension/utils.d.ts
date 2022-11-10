@@ -1,0 +1,10 @@
+import { Schema, Mark } from 'prosemirror-model';
+import { EditorState } from 'prosemirror-state';
+import { Node as PMNode } from 'prosemirror-model';
+import { NodeWithPos, DomAtPos } from 'prosemirror-utils';
+export declare const getSelectedExtension: (state: EditorState, searchParent?: boolean) => import("prosemirror-utils").ContentNodeWithPos | undefined;
+export declare const findExtensionWithLocalId: (state: EditorState, localId?: string | undefined) => NodeWithPos | undefined;
+export declare const getSelectedDomElement: (schema: Schema, domAtPos: DomAtPos, selectedExtensionNode: NodeWithPos) => HTMLElement;
+export declare const getDataConsumerMark: (newNode: PMNode) => Mark | undefined;
+export declare const getNodeTypesReferenced: (ids: string[], state: EditorState) => string[];
+export declare const findNodePosWithLocalId: (state: EditorState, localId: string) => NodeWithPos | undefined;

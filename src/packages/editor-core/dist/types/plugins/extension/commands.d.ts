@@ -1,0 +1,10 @@
+import { ExtensionLayout } from '@atlaskit/adf-schema';
+import { ExtensionState } from './types';
+import { Parameters, TransformBefore, TransformAfter } from '@atlaskit/editor-common/src/extensions';
+export declare function updateState(state: Partial<ExtensionState>): import("@atlaskit/editor-common/types").Command;
+export declare function setEditingContextToContextPanel<T extends Parameters = Parameters>(processParametersBefore: TransformBefore<T>, processParametersAfter: TransformAfter<T>): import("@atlaskit/editor-common/types").Command;
+export declare const clearEditingContext: import("@atlaskit/editor-common/types").Command;
+export declare const forceAutoSave: (resolve: () => void, reject?: ((reason?: any) => void) | undefined) => import("@atlaskit/editor-common/types").Command;
+export declare const showContextPanel: import("@atlaskit/editor-common/types").Command;
+export declare const updateExtensionLayout: (layout: ExtensionLayout) => import("@atlaskit/editor-common/types").Command;
+export declare const removeExtension: () => import("@atlaskit/editor-common/types").Command;

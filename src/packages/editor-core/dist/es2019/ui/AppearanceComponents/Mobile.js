@@ -1,0 +1,87 @@
+/** @jsx jsx */
+import React, { useCallback } from 'react';
+import { css, jsx } from '@emotion/react';
+import { pluginKey as maxContentSizePluginKey } from '../../plugins/max-content-size';
+import { mobileDimensionsPluginKey } from '../../plugins/mobile-dimensions/plugin-factory';
+import WithPluginState from '../WithPluginState';
+import WithFlash from '../WithFlash';
+import { createEditorContentStyle } from '../ContentStyles';
+import { ClickAreaMobile as ClickArea } from '../Addon';
+const mobileEditor = css`
+  min-height: 30px;
+  width: 100%;
+  max-width: inherit;
+  box-sizing: border-box;
+  word-wrap: break-word;
+
+  div > .ProseMirror {
+    outline: none;
+    white-space: pre-wrap;
+    padding: 0;
+    margin: 0;
+  }
+`;
+const ContentArea = createEditorContentStyle();
+ContentArea.displayName = 'ContentArea';
+export function MobileAppearance({
+  editorView,
+  persistScrollGutter,
+  children,
+  editorDisabled
+}) {
+  const render = useCallback(({
+    maxContentSize,
+    mobileDimensions
+  }) => {
+    const maxContentSizeReached = Boolean(maxContentSize === null || maxContentSize === void 0 ? void 0 : maxContentSize.maxContentSizeReached);
+    let minHeight = 100;
+    let currentIsExpanded = true; // isExpanded prop should always be true for Hybrid Editor
+
+    if (mobileDimensions) {
+      const {
+        keyboardHeight,
+        windowHeight,
+        mobilePaddingTop,
+        isExpanded
+      } = mobileDimensions;
+      /*
+        We calculate the min-height based on the windowHeight - keyboardHeight - paddingTop.
+        This is needed due to scrolling issues when there is no content to scroll (like, only having 1 paragraph),
+        but if the clickable area is bigger than the windowHeight - keyboard (including toolbar) then the view
+        is scrolled nevertheless, and it gives the sensation that the content was lost.
+      */
+
+      if (!persistScrollGutter) {
+        // in iOS Hybrid Editor windowHeight doesn't exclude keyboardHeight
+        // in Android keyboardHeight is always set to -1;
+        minHeight = windowHeight - keyboardHeight - 2 * mobilePaddingTop;
+      } else {
+        // in iOS Compact Editor windowHeight excludes keyboardHeight
+        minHeight = windowHeight - mobilePaddingTop; // isExpanded can be true of false for Compact editor
+
+        currentIsExpanded = isExpanded;
+      }
+    }
+
+    return jsx(WithFlash, {
+      animate: maxContentSizeReached
+    }, jsx("div", {
+      css: mobileEditor
+    }, jsx(ClickArea, {
+      editorView: editorView || undefined,
+      minHeight: minHeight,
+      persistScrollGutter: persistScrollGutter,
+      isExpanded: currentIsExpanded,
+      editorDisabled: editorDisabled
+    }, jsx(ContentArea, null, jsx("div", {
+      className: "ak-editor-content-area"
+    }, children)))));
+  }, [children, editorView, persistScrollGutter, editorDisabled]);
+  return jsx(WithPluginState, {
+    plugins: {
+      maxContentSize: maxContentSizePluginKey,
+      mobileDimensions: mobileDimensionsPluginKey
+    },
+    render: render
+  });
+}

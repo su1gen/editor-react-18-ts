@@ -1,0 +1,10 @@
+import { EditorState, ReadonlyTransaction, Transaction } from 'prosemirror-state';
+import { AnalyticsEventPayloadWithChannel, AnalyticsEventPayload } from './types';
+import { HigherOrderCommand } from '../../types/command';
+import { mapActionSubjectIdToAttributes } from '../../analytics-api/map-attributes';
+import { getStateContext, getSelectionType, findInsertLocation } from '../../analytics-api/editor-state-context';
+export { getStateContext, mapActionSubjectIdToAttributes, getSelectionType, findInsertLocation, };
+export declare function addAnalytics(state: EditorState, tr: Transaction, payload: AnalyticsEventPayload, channel?: string): Transaction;
+export declare type AnalyticsEventPayloadCallback = (state: EditorState) => AnalyticsEventPayload | undefined;
+export declare function withAnalytics(payload: AnalyticsEventPayload | AnalyticsEventPayloadCallback, channel?: string): HigherOrderCommand;
+export declare function getAnalyticsEventsFromTransaction(tr: Transaction | ReadonlyTransaction): AnalyticsEventPayloadWithChannel[];

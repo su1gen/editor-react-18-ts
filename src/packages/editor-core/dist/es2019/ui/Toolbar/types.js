@@ -1,0 +1,1 @@
+export { ToolbarSize, ToolbarWidths, ToolbarWidthsFullPage } from '@atlaskit/editor-common/types';

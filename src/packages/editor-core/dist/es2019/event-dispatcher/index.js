@@ -1,0 +1,1 @@
+export { EventDispatcher, createDispatch } from '@atlaskit/editor-common/event-dispatcher';

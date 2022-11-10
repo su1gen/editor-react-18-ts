@@ -1,0 +1,10 @@
+import { SafePlugin } from '@atlaskit/editor-common/safe-plugin';
+import { PluginKey } from 'prosemirror-state';
+import { Dispatch } from '../../../../event-dispatcher';
+import { MediaLinkingActions } from './actions';
+import { MediaLinkingState } from './types';
+export declare const mediaLinkingPluginKey: PluginKey<MediaLinkingState, any>;
+export declare const createMediaLinkingCommand: <A = MediaLinkingActions>(action: A | ((state: Readonly<import("prosemirror-state").EditorState<any>>) => false | A), transform?: ((tr: import("prosemirror-state").Transaction<any>, state: import("prosemirror-state").EditorState<any>) => import("prosemirror-state").Transaction<any>) | undefined) => import("@atlaskit/editor-common/types").Command, getMediaLinkingState: (state: import("prosemirror-state").EditorState<any>) => MediaLinkingState;
+export type { MediaLinkingState } from './types';
+declare const _default: (dispatch: Dispatch) => SafePlugin<MediaLinkingState, import("prosemirror-model").Schema<any, any>>;
+export default _default;

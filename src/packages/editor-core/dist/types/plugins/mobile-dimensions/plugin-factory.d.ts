@@ -1,0 +1,5 @@
+import { PluginKey } from 'prosemirror-state';
+import { MobileDimensionsPluginState } from './types';
+import { MobileDimensionsAction } from './actions';
+export declare const mobileDimensionsPluginKey: PluginKey<any, any>;
+export declare const createPluginState: (dispatch: import("@atlaskit/editor-common/event-dispatcher").Dispatch<any>, initialState: MobileDimensionsPluginState | ((state: import("prosemirror-state").EditorState<any>) => MobileDimensionsPluginState)) => import("prosemirror-state").SafeStateField<MobileDimensionsPluginState, import("prosemirror-model").Schema<any, any>>, getPluginState: (state: import("prosemirror-state").EditorState<any>) => MobileDimensionsPluginState, createCommand: <A = MobileDimensionsAction>(action: A | ((state: Readonly<import("prosemirror-state").EditorState<any>>) => false | A), transform?: ((tr: import("prosemirror-state").Transaction<any>, state: import("prosemirror-state").EditorState<any>) => import("prosemirror-state").Transaction<any>) | undefined) => import("@atlaskit/editor-common/types").Command;

@@ -1,0 +1,11 @@
+import { EditorView } from 'prosemirror-view';
+import { Transaction, EditorState, Selection } from 'prosemirror-state';
+import { Node } from 'prosemirror-model';
+import { Side } from '@atlaskit/editor-common/selection';
+export { setNodeSelection, setTextSelection, } from '@atlaskit/editor-common/utils';
+export declare function setAllSelection(view: EditorView): void;
+export declare function setGapCursorSelection(view: EditorView, pos: number, side: Side): void;
+export declare function setCellSelection(view: EditorView, anchor: number, head?: number): void;
+export declare const normaliseNestedLayout: ({ selection, doc }: EditorState | Transaction, node: Node) => Node<any>;
+export declare const isValidPosition: (pos: number, state: EditorState) => boolean;
+export declare const duplicateSelection: (selectionToDuplicate: Selection, doc: Node) => Selection | undefined;

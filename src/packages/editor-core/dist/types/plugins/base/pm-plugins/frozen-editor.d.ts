@@ -1,0 +1,12 @@
+import { SafePlugin } from '@atlaskit/editor-common/safe-plugin';
+import { PluginKey } from 'prosemirror-state';
+import { DispatchAnalyticsEvent } from '../../analytics';
+import { InputTracking, BrowserFreezetracking } from '../../../types/performance-tracking';
+export declare const frozenEditorPluginKey: PluginKey<any, any>;
+export declare const DEFAULT_FREEZE_THRESHOLD = 600;
+export declare const NORMAL_SEVERITY_THRESHOLD = 2000;
+export declare const DEGRADED_SEVERITY_THRESHOLD = 3000;
+export declare const DEFAULT_TRACK_SEVERITY_THRESHOLD_NORMAL = 100;
+export declare const DEFAULT_TRACK_SEVERITY_THRESHOLD_DEGRADED = 500;
+declare const _default: (dispatchAnalyticsEvent: DispatchAnalyticsEvent, inputTracking?: InputTracking | undefined, browserFreezeTracking?: BrowserFreezetracking | undefined, ufo?: boolean | undefined) => SafePlugin<any, any>;
+export default _default;

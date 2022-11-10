@@ -1,0 +1,12 @@
+import { Decoration, EditorView } from 'prosemirror-view';
+export declare const activate: () => import("@atlaskit/editor-common/types").Command;
+export declare const find: (editorView: EditorView, containerElement: HTMLElement | null, keyword?: string | undefined) => import("../..").Command;
+export declare const findNext: () => import("../..").Command;
+export declare const findPrevious: () => import("../..").Command;
+export declare const replace: (replaceText: string) => import("../..").Command;
+export declare const replaceAll: (replaceText: string) => import("@atlaskit/editor-common/types").Command;
+export declare const addDecorations: (decorations: Decoration[]) => import("@atlaskit/editor-common/types").Command;
+export declare const removeDecorations: (decorations: Decoration[]) => import("@atlaskit/editor-common/types").Command;
+export declare const cancelSearch: () => import("@atlaskit/editor-common/types").Command;
+export declare const blur: () => import("@atlaskit/editor-common/types").Command;
+export declare const toggleMatchCase: () => import("@atlaskit/editor-common/types").Command;

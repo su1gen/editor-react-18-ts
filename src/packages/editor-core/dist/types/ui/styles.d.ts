@@ -1,0 +1,13 @@
+export { shortcutStyle } from '@atlaskit/editor-shared-styles/shortcut';
+export { scrollbarStyles } from '@atlaskit/editor-shared-styles/scrollbar';
+export declare const cellColourPreviewStyles: (selectedColor: string) => import("@emotion/react").SerializedStyles;
+export declare const buttonGroupStyle: import("@emotion/react").SerializedStyles;
+export declare const separatorStyles: import("@emotion/react").SerializedStyles;
+export declare const wrapperStyle: import("@emotion/react").SerializedStyles;
+export declare const wrapperSmallStyle: import("@emotion/react").SerializedStyles;
+export declare const expandIconWrapperStyle: import("@emotion/react").SerializedStyles;
+export declare const triggerWrapperStyles: import("@emotion/react").SerializedStyles;
+export declare const buttonContentStyle: import("@emotion/react").SerializedStyles;
+export declare const buttonContentReducedSpacingStyle: import("@emotion/react").SerializedStyles;
+export declare const dropShadow: import("@emotion/react").SerializedStyles;
+export declare const clickSelectWrapperStyle: import("@emotion/react").SerializedStyles;

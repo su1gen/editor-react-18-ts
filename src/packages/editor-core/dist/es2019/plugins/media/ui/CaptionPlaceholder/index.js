@@ -1,0 +1,24 @@
+/** @jsx jsx */
+import { css, jsx } from '@emotion/react';
+import { FormattedMessage } from 'react-intl-next';
+import { N200 } from '@atlaskit/theme/colors';
+import { token } from '@atlaskit/tokens';
+import { messages } from './messages';
+const placeholder = css`
+  color: ${token('color.text.subtlest', N200)};
+  width: 100%;
+  text-align: center;
+  margin-top: 8px !important;
+  display: block;
+`;
+export const CAPTION_PLACEHOLDER_ID = 'caption-placeholder';
+export default (({
+  onClick
+}) => {
+  return jsx("span", {
+    css: placeholder,
+    onClick: onClick,
+    "data-id": CAPTION_PLACEHOLDER_ID,
+    "data-testid": "caption-placeholder"
+  }, jsx(FormattedMessage, messages.placeholder));
+});

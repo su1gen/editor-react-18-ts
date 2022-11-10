@@ -1,0 +1,21 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.FindReplaceActionTypes = void 0;
+var FindReplaceActionTypes;
+exports.FindReplaceActionTypes = FindReplaceActionTypes;
+
+(function (FindReplaceActionTypes) {
+  FindReplaceActionTypes["ACTIVATE"] = "ACTIVATE";
+  FindReplaceActionTypes["FIND"] = "FIND";
+  FindReplaceActionTypes["UPDATE_DECORATIONS"] = "UPDATE_DECORATIONS";
+  FindReplaceActionTypes["FIND_NEXT"] = "FIND_NEXT";
+  FindReplaceActionTypes["FIND_PREVIOUS"] = "FIND_PREVIOUS";
+  FindReplaceActionTypes["REPLACE"] = "REPLACE";
+  FindReplaceActionTypes["REPLACE_ALL"] = "REPLACE_ALL";
+  FindReplaceActionTypes["CANCEL"] = "CANCEL";
+  FindReplaceActionTypes["BLUR"] = "BLUR";
+  FindReplaceActionTypes["TOGGLE_MATCH_CASE"] = "TOGGLE_MATCH_CASE";
+})(FindReplaceActionTypes || (exports.FindReplaceActionTypes = FindReplaceActionTypes = {}));

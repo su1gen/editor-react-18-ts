@@ -1,0 +1,1 @@
+export var MAX_NESTED_LIST_INDENTATION = 6;

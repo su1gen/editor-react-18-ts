@@ -1,0 +1,129 @@
+import _slicedToArray from "@babel/runtime/helpers/slicedToArray";
+// #region Imports
+import React from 'react';
+import { useProvider, useProviderFactory } from '@atlaskit/editor-common/provider-factory';
+import analyticsPlugin from '../../../plugins/analytics';
+import basePlugin from '../../../plugins/base';
+import cardPlugin from '../../../plugins/card';
+import datePlugin from '../../../plugins/date';
+import emojiPlugin from '../../../plugins/emoji';
+import extensionPlugin from '../../../plugins/extension';
+import layoutPlugin from '../../../plugins/layout';
+import listPlugin from '../../../plugins/list';
+import mediaPlugin from '../../../plugins/media';
+import mentionsPlugin from '../../../plugins/mentions';
+import mobileDimensionsPlugin from '../../../plugins/mobile-dimensions';
+import panelPlugin from '../../../plugins/panel';
+import placeholderPlugin from '../../../plugins/placeholder';
+import rulePlugin from '../../../plugins/rule';
+import statusPlugin from '../../../plugins/status';
+import { tablesPlugin } from '@atlaskit/editor-plugin-table';
+import tasksAndDecisionsPlugin from '../../../plugins/tasks-and-decisions';
+import textColorPlugin from '../../../plugins/text-color';
+import maxContentSizePlugin from '../../../plugins/max-content-size';
+import expandPlugin from '../../../plugins/expand';
+import selectionPlugin from '../../../plugins/selection';
+import { PresetProvider } from '../Editor';
+import { useDefaultPreset } from './default';
+import { addExcludesFromProviderFactory } from './utils';
+import { quickInsertPlugin } from '../../../plugins'; // #endregion
+
+export function useMobilePreset(_ref) {
+  var media = _ref.media,
+      placeholder = _ref.placeholder,
+      maxContentSize = _ref.maxContentSize,
+      createAnalyticsEvent = _ref.createAnalyticsEvent,
+      featureFlags = _ref.featureFlags;
+  var mediaProvider = useProvider('mediaProvider');
+
+  var _useDefaultPreset = useDefaultPreset({
+    featureFlags: featureFlags,
+    paste: {
+      plainTextPasteLinkification: featureFlags === null || featureFlags === void 0 ? void 0 : featureFlags.plainTextPasteLinkification
+    }
+  }),
+      _useDefaultPreset2 = _slicedToArray(_useDefaultPreset, 1),
+      preset = _useDefaultPreset2[0];
+
+  preset.add([basePlugin, {
+    allowScrollGutter: {
+      getScrollElement: function getScrollElement() {
+        return document.body;
+      },
+      allowCustomScrollHandler: false
+    }
+  }]);
+  preset.add([analyticsPlugin, createAnalyticsEvent]);
+  preset.add([tablesPlugin, {
+    tableOptions: {
+      allowControls: false
+    }
+  }]);
+  preset.add(panelPlugin);
+  preset.add(listPlugin);
+  preset.add(textColorPlugin);
+  preset.add(extensionPlugin);
+  preset.add(rulePlugin);
+  preset.add(datePlugin);
+  preset.add(layoutPlugin);
+  preset.add([quickInsertPlugin, {
+    headless: true,
+    disableDefaultItems: true
+  }]);
+  preset.add([statusPlugin, {
+    menuDisabled: false
+  }]);
+  preset.add([placeholderPlugin, {
+    placeholder: placeholder
+  }]);
+  preset.add(mobileDimensionsPlugin);
+  preset.add(expandPlugin);
+  preset.add([selectionPlugin, {
+    useLongPressSelection: false
+  }]); // Begin -> This would be exclude if the provider doesnt exist in the factory
+
+  preset.add(tasksAndDecisionsPlugin);
+  preset.add([cardPlugin, {
+    allowBlockCards: true,
+    platform: 'mobile'
+  }]);
+  preset.add([mentionsPlugin]);
+  preset.add([emojiPlugin]); // End
+
+  if (maxContentSize) {
+    preset.add([maxContentSizePlugin, maxContentSize]);
+  }
+
+  if (media) {
+    preset.add([mediaPlugin, {
+      provider: mediaProvider,
+      customMediaPicker: media.picker,
+      fullWidthEnabled: false,
+      allowMediaSingle: true,
+      allowLazyLoading: false,
+      allowMediaSingleEditable: false,
+      allowRemoteDimensionsFetch: false,
+      allowMarkingUploadsAsIncomplete: true,
+      allowAltTextOnImages: true,
+      allowTemplatePlaceholders: {
+        allowInserting: true
+      }
+    }]);
+  }
+
+  return [preset];
+}
+export function EditorPresetMobile(props) {
+  var children = props.children,
+      excludes = props.excludes;
+
+  var _useMobilePreset = useMobilePreset(props),
+      _useMobilePreset2 = _slicedToArray(_useMobilePreset, 1),
+      preset = _useMobilePreset2[0];
+
+  var providerFactory = useProviderFactory();
+  var plugins = preset.getEditorPlugins(addExcludesFromProviderFactory(providerFactory, excludes));
+  return /*#__PURE__*/React.createElement(PresetProvider, {
+    value: plugins
+  }, children);
+}

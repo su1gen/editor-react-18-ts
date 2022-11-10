@@ -1,0 +1,20 @@
+import React from 'react';
+import type { EditorView } from 'prosemirror-view';
+import { CreateUIAnalyticsEvent } from '@atlaskit/analytics-next';
+import type { TypeAheadHandler, TypeAheadInputMethod } from '../types';
+declare type WrapperProps = {
+    triggerHandler: TypeAheadHandler;
+    editorView: EditorView;
+    anchorElement: HTMLElement;
+    getDecorationPosition: () => number;
+    shouldFocusCursorInsideQuery: boolean;
+    onUndoRedo?: (inputType: 'historyUndo' | 'historyRedo') => boolean;
+    reopenQuery?: string;
+    popupsMountPoint?: HTMLElement;
+    popupsBoundariesElement?: HTMLElement;
+    popupsScrollableElement?: HTMLElement;
+    createAnalyticsEvent?: CreateUIAnalyticsEvent;
+    inputMethod?: TypeAheadInputMethod;
+};
+export declare const WrapperTypeAhead: React.FC<WrapperProps>;
+export {};

@@ -1,0 +1,12 @@
+import { Transaction } from 'prosemirror-state';
+import { CardProvider } from '@atlaskit/editor-common/provider-factory';
+import { CardPluginAction, Request, CardInfo } from '../types';
+import { SmartLinkEvents } from '@atlaskit/smart-card';
+export declare const cardAction: (tr: Transaction, action: CardPluginAction) => Transaction;
+export declare const resolveCard: (url: string) => (tr: Transaction) => Transaction<any>;
+export declare const queueCards: (requests: Request[]) => (tr: Transaction) => Transaction<any>;
+export declare const registerCard: (info: CardInfo) => (tr: Transaction) => Transaction<any>;
+export declare const registerSmartCardEvents: (smartLinkEvents: SmartLinkEvents) => (tr: Transaction) => Transaction<any>;
+export declare const setProvider: (cardProvider: CardProvider | null) => (tr: Transaction) => Transaction<any>;
+export declare const showLinkToolbar: (tr: Transaction) => Transaction<any>;
+export declare const hideLinkToolbar: (tr: Transaction) => Transaction<any>;

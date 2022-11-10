@@ -1,0 +1,10 @@
+import { SafePlugin } from '@atlaskit/editor-common/safe-plugin';
+import { PluginKey } from 'prosemirror-state';
+import { Dispatch } from '../../event-dispatcher';
+import { EditorPlugin } from '../../types';
+import type { EditorContainerWidth } from '@atlaskit/editor-common/types';
+export declare type WidthPluginState = EditorContainerWidth;
+export declare const pluginKey: PluginKey<EditorContainerWidth, any>;
+export declare function createPlugin(dispatch: Dispatch<WidthPluginState>): SafePlugin | undefined;
+declare const widthPlugin: () => EditorPlugin;
+export default widthPlugin;

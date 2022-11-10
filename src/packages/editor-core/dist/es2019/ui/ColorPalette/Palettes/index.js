@@ -1,0 +1,1 @@
+export { DEFAULT_BORDER_COLOR } from './common';

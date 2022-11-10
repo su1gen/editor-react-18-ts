@@ -1,0 +1,8 @@
+import _taggedTemplateLiteral from "@babel/runtime/helpers/taggedTemplateLiteral";
+
+var _templateObject;
+
+import { css } from '@emotion/react';
+import { StatusSharedCssClassName, TableSharedCssClassName } from '@atlaskit/editor-common/styles';
+import { SelectionStyle, getSelectionStyles, akEditorDeleteBackgroundWithOpacity, akEditorDeleteBorder, akEditorSelectedBorderSize, akEditorSelectedNodeClassName } from '@atlaskit/editor-shared-styles';
+export var statusStyles = css(_templateObject || (_templateObject = _taggedTemplateLiteral(["\n  .", ",\n    .", ",\n    [data-layout-section] {\n    .", " {\n      max-width: 100%;\n      line-height: 0;\n\n      > span {\n        width: 100%;\n      }\n    }\n  }\n  .", " {\n    > span {\n      cursor: pointer;\n      line-height: 0; /* Prevent responsive layouts increasing height of container. */\n    }\n\n    &.", "\n      .", "\n      > span {\n      ", "\n    }\n  }\n\n  .danger {\n    .", " > span {\n      background-color: ", ";\n    }\n\n    .", ".", "\n      .", "\n      > span {\n      box-shadow: 0 0 0 ", "px ", ";\n    }\n  }\n"])), TableSharedCssClassName.TABLE_CELL_WRAPPER, TableSharedCssClassName.TABLE_HEADER_CELL_WRAPPER, StatusSharedCssClassName.STATUS_CONTAINER, StatusSharedCssClassName.STATUS_CONTAINER, akEditorSelectedNodeClassName, StatusSharedCssClassName.STATUS_LOZENGE, getSelectionStyles([SelectionStyle.BoxShadow]), StatusSharedCssClassName.STATUS_LOZENGE, akEditorDeleteBackgroundWithOpacity, StatusSharedCssClassName.STATUS_CONTAINER, akEditorSelectedNodeClassName, StatusSharedCssClassName.STATUS_LOZENGE, akEditorSelectedBorderSize, akEditorDeleteBorder);
